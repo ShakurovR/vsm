@@ -1,0 +1,15 @@
+apps/api/media/
+apps/pgsql/
+apps/rabbitmq/data/
+apps/rabbitmq/log/
+.env
+*.bak
+.venv
+__pycache__
+ds_research/
+apps/api/cache_folder
+apps/llama/models/
+apps/chroma/data/
+extras/nllb-200-distilled-600M/
+extras/paraphrase-multilingual-mpnet-base-v2/
+extras/cache_folder/

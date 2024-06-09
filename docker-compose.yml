@@ -1,0 +1,271 @@
+version: "3.8"
+services:
+  redis:
+    image: redis:latest
+    container_name: ${PROJECT_NAME}-redis
+    ports:
+      - 6379:6379
+    restart: unless-stopped
+    labels:
+      org.label-schema.group: ${PROJECT_NAME}
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+
+  rabbitmq:
+    container_name: ${PROJECT_NAME}-rabbitmq
+    image: rabbitmq:3-management-alpine
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USERNAME}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ./apps/rabbitmq/data/:/var/lib/rabbitmq/
+      - ./apps/rabbitmq/log/:/var/log/rabbitmq/
+      - ./apps/rabbitmq/conf/:/etc/rabbitmq/conf.d/
+    restart: unless-stopped
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 3
+
+  pgsql:
+    container_name: ${PROJECT_NAME}-pgsql
+    image: postgres
+    environment:
+      - POSTGRES_USER=${PGSQL_USERNAME}
+      - POSTGRES_PASSWORD=${PGSQL_PASSWORD}
+      - PGDATA=${PGSQL_DATA}
+      - POSTGRES_DB=${PGSQL_DATABASE}
+    volumes:
+      - ./apps/pgsql/data:/data
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ruha -d vsm" ]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    image: ${PROJECT_NAME}-api
+    container_name: ${PROJECT_NAME}-api
+    environment:
+      - DATABASE_URL=${PGSQL_URL}
+      - API_MEDIA_URL=http://localhost:3000/files/
+      - API_MEDIA_PATH=${API_MEDIA_PATH}
+      - API_BASE_URL=${API_BASE_URL}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+    volumes:
+      - ./apps/api/media:/files
+      - ./apps/api:/app
+    ports:
+      - 9000:9000
+    restart: unless-stopped
+    healthcheck:
+      test: curl --fail http://api:9000/healthcheck || exit 1
+      interval: 30s
+      timeout: 30s
+      retries: 5
+      start_period: 10s
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      chroma:
+        condition: service_healthy
+      pgsql:
+        condition: service_healthy
+
+  indexer:
+    build:
+      context: ./apps/api/
+      dockerfile: indexer.Dockerfile
+    image: ${PROJECT_NAME}-indexer
+    container_name: ${PROJECT_NAME}-indexer
+    environment:
+      - DATABASE_URL=${PGSQL_URL}
+      - API_MEDIA_URL=${API_MEDIA_URL}
+      - API_MEDIA_PATH=${API_MEDIA_PATH}
+      - API_BASE_URL=${API_BASE_URL}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - CHROMA_HOST=${CHROMA_HOST}
+      - LLAMA_URL=${LLAMA_URL}
+    volumes:
+      - ./apps/api:/app
+      - ./apps/api/media:/files
+      - ./extras/cache_folder:/root/.cache
+    restart: unless-stopped
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
+        limits:
+          memory: 55G
+    tty: True
+
+  uploader:
+    build:
+      context: ./apps/api/
+      dockerfile: uploader.Dockerfile
+    image: ${PROJECT_NAME}-uploader
+    container_name: ${PROJECT_NAME}-uploader
+    environment:
+      - DATABASE_URL=${PGSQL_URL}
+      - API_MEDIA_URL=${API_MEDIA_URL}
+      - API_MEDIA_PATH=${API_MEDIA_PATH}
+      - API_BASE_URL=${API_BASE_URL}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+    volumes:
+      - ./apps/api:/app
+      - ./apps/api/media:/files
+      - ./extras/cache_folder:/root/.cache
+    restart: unless-stopped
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
+        limits:
+          memory: 55G
+    tty: True
+
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+    image: ${PROJECT_NAME}-web
+    restart: on-failure
+    volumes:
+      - ./apps/api/media/:/app/media/
+    container_name: ${PROJECT_NAME}-web
+    environment:
+      - REACT_APP_API_URL=${API_BASE_URL}
+    ports:
+      - "3000:80"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:80" ]
+      interval: 10s
+      timeout: 30s
+      retries: 10
+    depends_on:
+      api:
+        condition: service_healthy
+
+  llama:
+    image: ghcr.io/ggerganov/llama.cpp:server-cuda-0ef46da632c32faa1a538e5dc180994e8bbb46e1
+    container_name: ${PROJECT_NAME}-llama
+    ports:
+      - 9102:8080
+    volumes:
+      - ./apps/llama/models/:/models/
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [ gpu ]
+    command: "-m /models/ggml-mistral-q_4_k.gguf --mmproj /models/mmproj-mistral7b-f16-q6_k_2.gguf -c 1024 -ngl 99 --host 0.0.0.0 --port 8080"
+    tty: True
+
+  chroma:
+    image: ghcr.io/chroma-core/chroma:0.5.1.dev137
+    container_name: ${PROJECT_NAME}-chroma
+    volumes:
+      - ./apps/chroma/data/:/chroma/chroma
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    environment:
+      - IS_PERSISTENT=TRUE
+      - ANONYMIZED_TELEMETRY=False
+    command: "--workers 1 --host 0.0.0.0 --port 8000 --proxy-headers --log-config chromadb/log_config.yml --timeout-keep-alive 30"
+    labels:
+      org.label-schema.group: ${PROJECT_NAME}
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "curl",
+          "-f",
+          "http://localhost:8000/api/v1/heartbeat"
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  transcriber:
+    build:
+      context: ./apps/transcriber
+      dockerfile: transcriber.Dockerfile
+    image: ${PROJECT_NAME}-transcriber
+    container_name: ${PROJECT_NAME}-transcriber
+    volumes:
+      - ./apps/transcriber:/app
+      - ./apps/api/media/:/app/media/
+      - ./data/hf_cache:/root/.cache/huggingface
+    environment:
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+        limits:
+          memory: 50G 
+  app:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      # These ports are in format <host-port>:<container-port>
+      - '80:80' # Public HTTP Port
+      - '443:443' # Public HTTPS Port
+      - '7878:81' # Admin Web Port
+      # Add any other Stream port you want to expose
+      # - '21:21' # FTP
+
+    # Uncomment the next line if you uncomment anything in the section
+    # environment:
+      # Uncomment this if you want to change the location of
+      # the SQLite DB file within the container
+      # DB_SQLITE_FILE: "/data/database.sqlite"
+
+      # Uncomment this if IPv6 is not enabled on your host
+      # DISABLE_IPV6: 'true'
+
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+  
+
+networks:
+  default:
+    name: vsm_default
+    external: true
