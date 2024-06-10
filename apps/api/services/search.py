@@ -55,6 +55,7 @@ def get_videos_scope(datum: list[tuple[int, float]]) -> list[VideoSearchResultLi
                 id=video_id,
                 name=video.name,
                 length=video.length,
+                description=video.description,
                 checksum=video.checksum,
                 preview=video.urls.get("preview"),
                 score=max(scores[video_id]),
@@ -119,7 +120,7 @@ def search_list(
     }
 
     en_query = translation(query)
-    docs = CHClient.similarity_search_with_relevance_scores(query=en_query, k=1000)
+    docs = CHClient.similarity_search_with_relevance_scores(query=en_query, k=10)
     ids_score = list(
         map(lambda doc: get_correction_scope(correction=correction, data=doc), docs)
     )
@@ -140,5 +141,5 @@ def search_one(
     }
 
     en_query = translation(query)
-    docs = CHClient.similarity_search_with_relevance_scores(query=en_query, k=1000)
+    docs = CHClient.similarity_search_with_relevance_scores(query=en_query, k=10)
     return filter_docs(id=id, datum=docs, correction=correction)

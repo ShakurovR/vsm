@@ -109,6 +109,7 @@ class VideoReadList(BaseModel):
     is_indexed: Optional[bool] = False
     checksum: Optional[str]
     preview: Optional[str] = None
+    description: Optional[str] = None
 
     @validator("preview", pre=True, always=True)
     def make_files(cls, v: str, values: dict):
