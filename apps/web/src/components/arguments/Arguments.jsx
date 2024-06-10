@@ -7,14 +7,16 @@ const Arguments = ({ description, time, id, url }) => {
   if (url) {
     clearUrl = url.replace("http://localhost:3000/", "");
   }
+
   return (
     <>
-      <Card>
+      <Card style={{ padding: "20px" }}>
+        <Text>{description}</Text>
         <Picture
           src={`${import.meta.env.VITE_HOST}/${clearUrl}`}
-          className="responsive-img "
+          className="responsive-img"
+          height="300px"
         />
-        <Text>{description}</Text>
       </Card>
     </>
   );

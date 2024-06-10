@@ -6,7 +6,7 @@ import { Badge } from "@consta/uikit/Badge";
 import { Button } from "@consta/uikit/Button";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-const Video = ({ id, preview, checksum, video, score }) => {
+const Video = ({ id, preview, checksum, video, score, desc, single }) => {
   let updatedPreview = preview;
   if (preview) {
     updatedPreview = preview.replace("http://localhost:3000/", "");
@@ -17,7 +17,13 @@ const Video = ({ id, preview, checksum, video, score }) => {
   return (
     <GridItem>
       <Card className="video-card player-wrapper ">
-        <Badge status="system" label={`score: ${score?.toFixed(2)}`} />
+        {!single && (
+          <Badge
+            status="system"
+            label={`score: ${score?.toFixed(2)}`}
+            style={{ marginBottom: "10px" }}
+          />
+        )}
         <ReactPlayer
           url={video}
           controls={true}
@@ -25,14 +31,21 @@ const Video = ({ id, preview, checksum, video, score }) => {
           min-height="100%"
           className="react-player"
         />
-        <Text className="word-wrap">{checksum}</Text>
-        <Link to={`/video/${id}${location.search}`}>
-          <Button
-            label="Подробнее"
-            style={{ marginTop: "20px" }}
-            width="100%"
-          />
-        </Link>
+        <Text className="word-wrap" size="sm" style={{ marginTop: "10px" }}>
+          {desc}
+        </Text>
+        {!single && (
+          <Link to={`/video/${id}${location.search}`}>
+            <Button
+              label="Подробнее"
+              style={{ marginTop: "20px" }}
+              width="100%"
+            />
+          </Link>
+        )}
+        <Text className="word-wrap" view="ghost" size="xs">
+          {checksum}
+        </Text>
       </Card>
     </GridItem>
   );

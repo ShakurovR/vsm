@@ -54,12 +54,12 @@ const Home = () => {
         <Grid
           cols={1}
           xAlign="center"
-          yAlign="center"
+          yAlign="top"
           gap="xl"
           style={{ marginTop: "30px" }}
           breakpoints={{
             768: {
-              cols: 5,
+              cols: 4,
             },
           }}
         >
@@ -82,6 +82,8 @@ const Home = () => {
                 checksum={item.checksum}
                 video={item.video}
                 score={item.score}
+                single={false}
+                desc={item.description}
               />
             ))}
         </Grid>
