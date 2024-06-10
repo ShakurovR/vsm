@@ -1,13 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams, Link, useNavigate } from "react-router-dom";
 import Video from "../components/video/Video";
 import { Text } from "@consta/uikit/Text";
 import Arguments from "../components/arguments/Arguments";
 import { Grid, GridItem } from "@consta/uikit/Grid";
 import { Tabs } from "@consta/uikit/Tabs";
 import React from "react";
+import { Button } from "@consta/uikit/Button";
 const getVideo = async (id, search, video, audio, text, hashtag) => {
   const data = await axios.get(`${import.meta.env.VITE_APIHOST}/video/${id}`, {
     params: {
@@ -22,6 +22,7 @@ const getVideo = async (id, search, video, audio, text, hashtag) => {
 };
 const SingleVideo = () => {
   let location = useLocation();
+  const navigate = useNavigate();
   let { id } = useParams();
   const searchParams = new URLSearchParams(location.search);
   const query = searchParams.get("query");
@@ -58,9 +59,23 @@ const SingleVideo = () => {
   if (isLoading) {
     return <div>Loading</div>;
   }
-  console.log(location);
+
   return (
     <>
+      <Link
+        to={".."}
+        onClick={(e) => {
+          e.preventDefault();
+          navigate(-1);
+        }}
+        style={{ textAlign: "right" }}
+      >
+        <Button
+          label="К результатам поиска"
+          size="xs"
+          style={{ backgroundColor: "#000" }}
+        />
+      </Link>
       <Grid cols={2} gap="xl" xAlign="center" yAlign="top">
         <GridItem>
           <Text size="2xl" align="left">

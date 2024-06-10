@@ -6,7 +6,7 @@ import axios from "axios";
 import React from "react";
 import SearchBlock from "../components/search/SearchBlock";
 import Video from "../components/video/Video";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const getSearch = async (value, prior) => {
   const data = await axios.get(`${import.meta.env.VITE_APIHOST}/search/`, {
@@ -22,15 +22,27 @@ const getSearch = async (value, prior) => {
 };
 const Home = () => {
   const navigate = useNavigate();
-  const [searchValue, setSearchValue] = React.useState(null);
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const [searchValue, setSearchValue] = React.useState(
+    searchParams.get("query") || null
+  );
   const [searchPrioritet, setSearchPrioritet] = React.useState({
-    video: 90,
-    audio: 80,
-    text: 20,
-    hashtag: 30,
+    video: parseInt(searchParams.get("video")) || 90,
+    audio: parseInt(searchParams.get("audio")) || 80,
+    text: parseInt(searchParams.get("text")) || 20,
+    hashtag: parseInt(searchParams.get("hashtag")) || 30,
   });
+  React.useEffect(() => {
+    setSearchValue(searchParams.get("query"));
+    setSearchPrioritet({
+      video: parseInt(searchParams.get("video")) || 90,
+      audio: parseInt(searchParams.get("audio")) || 80,
+      text: parseInt(searchParams.get("text")) || 20,
+      hashtag: parseInt(searchParams.get("hashtag")) || 30,
+    });
+  }, [location]);
   const handleSearch = (value, prioritet) => {
-    console.log(prioritet);
     setSearchValue(value);
     setSearchPrioritet({ ...prioritet });
     navigate(

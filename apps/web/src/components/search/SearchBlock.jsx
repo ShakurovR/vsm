@@ -4,13 +4,17 @@ import { FieldGroup } from "@consta/uikit/FieldGroup";
 import { Button } from "@consta/uikit/Button";
 import PropTypes from "prop-types";
 import { Select } from "@consta/uikit/Select";
+import { useLocation } from "react-router-dom";
 const SearchBlock = ({ handleSearch }) => {
-  const [value, setValue] = React.useState(null);
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const [value, setValue] = React.useState(searchParams.get("query") || null);
+
   const [priotitet, setPriotitet] = React.useState({
-    video: 90,
-    audio: 80,
-    text: 20,
-    hashtag: 30,
+    video: parseInt(searchParams.get("video")) || 90,
+    audio: parseInt(searchParams.get("audio")) || 80,
+    text: parseInt(searchParams.get("text")) || 20,
+    hashtag: parseInt(searchParams.get("hashtag")) || 30,
   });
   const items = [
     {
