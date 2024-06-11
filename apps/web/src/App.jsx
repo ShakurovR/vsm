@@ -4,6 +4,7 @@ import "./App.css";
 import Header from "./components/header/Header";
 import { Route, Routes } from "react-router-dom";
 import SingleVideo from "./page/SingleVideo";
+import AddVideo from "./page/AddVideo";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/video/:id" element={<SingleVideo />} />
+          <Route path="/add" element={<AddVideo />} />
         </Routes>
       </Layout>
     </>

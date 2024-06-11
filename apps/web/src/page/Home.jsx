@@ -1,4 +1,4 @@
-import { Grid } from "@consta/uikit/Grid";
+import { Grid, GridItem } from "@consta/uikit/Grid";
 import { Layout } from "@consta/uikit/Layout";
 import { Text } from "@consta/uikit/Text";
 import { useQuery } from "@tanstack/react-query";
@@ -7,6 +7,7 @@ import React from "react";
 import SearchBlock from "../components/search/SearchBlock";
 import Video from "../components/video/Video";
 import { useNavigate, useLocation } from "react-router-dom";
+import { Card } from "@consta/uikit/Card";
 
 const getSearch = async (value, prior) => {
   const data = await axios.get(`${import.meta.env.VITE_APIHOST}/search/`, {
@@ -99,6 +100,39 @@ const Home = () => {
               />
             ))}
         </Grid>
+        {!data && !isLoading && !isError && (
+          <Grid
+            cols={1}
+            xAlign="center"
+            yAlign="top"
+            gap="xl"
+            style={{ marginTop: "30px" }}
+          >
+            <GridItem>
+              <Text size="l" view="primary" className="list-grid">
+                Как мы обрабатываем видео
+              </Text>
+              <Text size="s" className="list-grid">
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                Suscipit, iusto! Nobis, qui? Culpa cupiditate perspiciatis
+                reprehenderit non, repellendus nulla! Officiis quis consequatur
+                unde quod corrupti molestias fugiat nulla optio voluptatibus?
+              </Text>
+              <Text size="s" className="list-grid">
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                Suscipit, iusto! Nobis, qui? Culpa cupiditate perspiciatis
+                reprehenderit non, repellendus nulla! Officiis quis consequatur
+                unde quod corrupti molestias fugiat nulla optio voluptatibus?
+              </Text>
+              <Text size="s" className="list-grid">
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                Suscipit, iusto! Nobis, qui? Culpa cupiditate perspiciatis
+                reprehenderit non, repellendus nulla! Officiis quis consequatur
+                unde quod corrupti molestias fugiat nulla optio voluptatibus?
+              </Text>
+            </GridItem>
+          </Grid>
+        )}
       </Layout>
     </>
   );
