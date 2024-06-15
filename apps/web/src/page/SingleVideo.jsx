@@ -191,22 +191,25 @@ const SingleVideo = () => {
         yAlign="top"
         style={{ marginTop: "60px", width: "100%" }}
       >
-        <GridItem style={{ width: "100%" }}>
-          <Card style={{ padding: "20px", width: "100%" }}>
-            <Text size="2xl" align="center">
-              Причины на освании которых нейросеть сочла видео релевантным
-            </Text>
-            <Text style={{ marginTop: "20px" }}>
-              В{" "}
-              <Badge
-                label={reasons[searchData.data.reasons[0].type_data]}
-                size="s"
-                status="normal"
-              />{" "}
-              был найден ключ: <Text>{searchData.data.reasons[0].content}</Text>
-            </Text>
-          </Card>
-        </GridItem>
+        {!searchIsLoading && (
+          <GridItem style={{ width: "100%" }}>
+            <Card style={{ padding: "20px", width: "100%" }}>
+              <Text size="2xl" align="center">
+                Причины на освании которых нейросеть сочла видео релевантным
+              </Text>
+              <Text style={{ marginTop: "20px" }}>
+                В{" "}
+                <Badge
+                  label={reasons[searchData.data.reasons[0].type_data]}
+                  size="s"
+                  status="normal"
+                />{" "}
+                был найден ключ:{" "}
+                <Text>{searchData.data.reasons[0].content}</Text>
+              </Text>
+            </Card>
+          </GridItem>
+        )}
       </Grid>
     </>
   );
