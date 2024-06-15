@@ -5,6 +5,8 @@ import { Button } from "@consta/uikit/Button";
 import PropTypes from "prop-types";
 import { Select } from "@consta/uikit/Select";
 import { useLocation } from "react-router-dom";
+import { sugg } from "../../data/sugg";
+import { preVideo } from "../../data/preVideo";
 const SearchBlock = ({ handleSearch }) => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -21,65 +23,6 @@ const SearchBlock = ({ handleSearch }) => {
       handleSearch(value, priotitet);
     }
   };
-  const items = [
-    {
-      label: "Чёрный",
-
-      id: 1,
-    },
-    {
-      label: "Белый",
-      id: 2,
-    },
-    {
-      label: "Синий",
-      id: 3,
-    },
-    {
-      label: "Красный",
-      id: 4,
-    },
-    {
-      label: "Сине-зелёный",
-      id: 5,
-    },
-    {
-      label: "Красно-коричневый",
-      id: 6,
-    },
-  ];
-  const preVideo = [
-    {
-      label: 10,
-    },
-    {
-      label: 20,
-    },
-    {
-      label: 30,
-    },
-    {
-      label: 40,
-    },
-    {
-      label: 50,
-    },
-    {
-      label: 60,
-    },
-    {
-      label: 70,
-    },
-    {
-      label: 80,
-    },
-    {
-      label: 90,
-    },
-    {
-      label: 100,
-    },
-  ];
 
   return (
     <>
@@ -89,7 +32,7 @@ const SearchBlock = ({ handleSearch }) => {
             type="text"
             placeholder="Начните вводить запрос"
             value={value}
-            items={items}
+            items={sugg}
             onChange={setValue}
             onKeyDown={handleKeyDown}
           />

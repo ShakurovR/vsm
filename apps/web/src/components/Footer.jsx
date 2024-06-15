@@ -14,7 +14,7 @@ const Footer = () => {
       }}
     >
       <Link to="/" style={{ textDecoration: "none", marginTop: "40px" }}>
-        <Text size="sm">Сделано командой - «Простите, у нас вдохновение»</Text>
+        <Text size="sm">Создано командой - «Простите, у нас вдохновение»</Text>
       </Link>
     </Layout>
   );

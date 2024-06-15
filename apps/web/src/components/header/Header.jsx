@@ -20,7 +20,7 @@ const Header = () => {
         </Link>
       </Text>
       <Link to="/add" style={{ textDecoration: "none" }}>
-        <Button label="Добавить видео" />
+        <Button label="Добавить видео" className="btn_white" />
       </Link>
     </Layout>
   );
