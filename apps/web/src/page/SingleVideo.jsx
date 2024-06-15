@@ -8,6 +8,7 @@ import { Grid, GridItem } from "@consta/uikit/Grid";
 import { Tabs } from "@consta/uikit/Tabs";
 import React from "react";
 import { Button } from "@consta/uikit/Button";
+
 const getVideo = async (id, search, video, audio, text, hashtag) => {
   const data = await axios.get(`${import.meta.env.VITE_APIHOST}/video/${id}`, {
     params: {
@@ -52,7 +53,7 @@ const SingleVideo = () => {
 
   const getItemLabel = (label) => `Фрейм ${label}`;
   const [tabNumber, setTabNumber] = React.useState(0);
-  console.log(tabNumber);
+  console.log(data);
   if (isError) {
     return <div>Error</div>;
   }
@@ -95,6 +96,30 @@ const SingleVideo = () => {
             single={true}
             desc={data.data.description}
           />
+          <div style={{ gap: "20px", display: "flex", marginTop: "20px" }}>
+            {data.data.urls.audio && (
+              <Link
+                to={data.data.urls.audio.replace(
+                  "http://localhost:3000",
+                  import.meta.env.VITE_HOST
+                )}
+                target="_blank"
+              >
+                <Button label="Скачать аудио" className="btn_black" />
+              </Link>
+            )}
+            {data.data.urls.subtitle && (
+              <Link
+                to={data.data.urls.subtitle.replace(
+                  "http://localhost:3000",
+                  import.meta.env.VITE_HOST
+                )}
+                target="_blank"
+              >
+                <Button label="Скачать субтитры" className="btn_black" />
+              </Link>
+            )}
+          </div>
         </GridItem>
         <GridItem>
           <Text size="3xl" align="left">
@@ -103,7 +128,7 @@ const SingleVideo = () => {
           <Text align="left" view="secondary" style={{ marginBottom: "15px" }}>
             Мы извлекли из видео 4 вида модальностей: субтитры, звуковую
             дорожку, описание содержимого видео, пользовательское описание.
-            Описание содержимого в виде мы извлекли из{" "}
+            Описание содержимого в видео мы извлекли из{" "}
             {data?.data?.frames?.length} уникальных ключевых фреймов
           </Text>
           <Tabs

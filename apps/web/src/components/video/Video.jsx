@@ -42,10 +42,16 @@ const Video = ({ id, preview, checksum, video, score, desc, single }) => {
               label="Подробнее"
               style={{ marginTop: "20px" }}
               width="100%"
+              className="btn_black"
             />
           </Link>
         )}
-        <Text className="word-wrap" view="ghost" size="xs">
+        <Text
+          className="word-wrap"
+          view="ghost"
+          size="xs"
+          style={{ marginTop: "10px" }}
+        >
           {checksum}
         </Text>
       </Card>

@@ -64,6 +64,15 @@ const Home = () => {
   return (
     <>
       <SearchBlock handleSearch={handleSearch} />
+      {data && (
+        <Text
+          style={{ marginTop: "20px", textAlign: "left" }}
+          view="secondary"
+          size="s"
+        >
+          В демо-режиме мы отдаем первые 9 видео с наивысшем скором.
+        </Text>
+      )}
       <Layout flex={1} className="justify-center">
         {isLoading && (
           <Container>

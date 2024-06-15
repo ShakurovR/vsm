@@ -11,7 +11,7 @@ const Container = ({ children }) => {
       style={{ marginTop: "30px" }}
       breakpoints={{
         768: {
-          cols: 4,
+          cols: 3,
         },
       }}
     >

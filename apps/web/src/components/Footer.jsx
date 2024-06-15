@@ -13,7 +13,11 @@ const Footer = () => {
         alignItems: "center",
       }}
     >
-      <Link to="/" style={{ textDecoration: "none", marginTop: "40px" }}>
+      <Link
+        to="https://t.me/Uberwow"
+        target="_blank"
+        style={{ textDecoration: "none", marginTop: "40px" }}
+      >
         <Text size="sm">Создано командой - «Простите, у нас вдохновение»</Text>
       </Link>
     </Layout>
