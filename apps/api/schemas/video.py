@@ -133,6 +133,7 @@ class VideoUpdate(BaseModel):
 class VideoSearchResultList(VideoReadList):
     video: str | None
     score: float
+    reason: str
 
 
 class VideoSearchResultReason(BaseModel):
