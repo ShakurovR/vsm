@@ -60,7 +60,6 @@ const Home = () => {
       refetchOnWindowFocus: true,
     },
   });
-  console.log(data);
   return (
     <>
       <SearchBlock handleSearch={handleSearch} />
@@ -70,7 +69,8 @@ const Home = () => {
           view="secondary"
           size="s"
         >
-          В демо-режиме мы отдаем первые 9 видео с наивысшем скором.
+          В демо-режиме мы отдаем первые 10 видео с наивысшим скором.{" "}
+          {`Скорость выполнения запроса в среднем 500мс`}
         </Text>
       )}
       <Layout flex={1} className="justify-center">
@@ -89,20 +89,23 @@ const Home = () => {
           </Container>
         )}
         {data && (
-          <Container>
-            {data?.data?.map((item) => (
-              <Video
-                key={item.id}
-                id={item.id}
-                preview={item.preview}
-                checksum={item.checksum}
-                video={item.video}
-                score={item.score}
-                single={false}
-                desc={item.description}
-              />
-            ))}
-          </Container>
+          <>
+            <Container>
+              {data?.data?.map((item) => (
+                <Video
+                  key={item.id}
+                  id={item.id}
+                  preview={item.preview}
+                  checksum={item.checksum}
+                  video={item.video}
+                  score={item.score}
+                  single={false}
+                  desc={item.description}
+                  reason={item.reason}
+                />
+              ))}
+            </Container>
+          </>
         )}
         {!data && !isLoading && !isError && (
           <Grid

@@ -30,7 +30,6 @@ const SearchBlock = ({ handleSearch }) => {
     const searchSuggestions = results.map((result) => result.item);
     // Обновляем список подсказок в AutoComplete
     setSuggestions(searchSuggestions);
-    console.log(suggestions);
     return results.map((result) => result.item);
   };
   React.useEffect(() => {

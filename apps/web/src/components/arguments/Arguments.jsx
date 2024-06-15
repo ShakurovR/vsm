@@ -26,7 +26,5 @@ export default Arguments;
 
 Arguments.propTypes = {
   description: PropTypes.string,
-  time: PropTypes.string,
-  id: PropTypes.number,
   url: PropTypes.string,
 };

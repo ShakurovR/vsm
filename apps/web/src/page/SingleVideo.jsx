@@ -8,9 +8,16 @@ import { Grid, GridItem } from "@consta/uikit/Grid";
 import { Tabs } from "@consta/uikit/Tabs";
 import React from "react";
 import { Button } from "@consta/uikit/Button";
+import { Badge } from "@consta/uikit/Badge";
+import { reasons } from "../data/reasons";
+import { Card } from "@consta/uikit/Card";
 
-const getVideo = async (id, search, video, audio, text, hashtag) => {
-  const data = await axios.get(`${import.meta.env.VITE_APIHOST}/video/${id}`, {
+const getVideo = async (id) => {
+  const data = await axios.get(`${import.meta.env.VITE_APIHOST}/video/${id}`);
+  return data;
+};
+const getSearchData = async (id, search, video, audio, text, hashtag) => {
+  const data = await axios.get(`${import.meta.env.VITE_APIHOST}/search/${id}`, {
     params: {
       query: search,
       video: video,
@@ -31,34 +38,46 @@ const SingleVideo = () => {
   const audio = searchParams.get("audio");
   const text = searchParams.get("text");
   const hashtag = searchParams.get("hashtag");
-  const { data, isLoading, isError } = useQuery({
+  const {
+    data: videoData,
+    isLoading: videoIsLoading,
+    isError: videoIsError,
+  } = useQuery({
     queryKey: ["video", id],
-    queryFn: () => getVideo(id, query, video, audio, text, hashtag),
+    queryFn: () => getVideo(id),
     options: {
       keepPreviousData: true,
       refetchOnWindowFocus: true,
     },
   });
+  const { data: searchData, isLoading: searchIsLoading } = useQuery({
+    queryKey: ["search", id],
+    queryFn: () => getSearchData(id, query, video, audio, text, hashtag),
+    options: {
+      keepPreviousData: true,
+      refetchOnWindowFocus: true,
+    },
+  });
+  console.log(searchData);
 
   // Use a state variable with a functional update to dynamically adjust items
   const [items, setItems] = React.useState([]);
 
   // Update items based on data.data.frames length after data is fetched
   React.useEffect(() => {
-    if (data?.data?.frames) {
-      const frameCount = data.data.frames.length;
+    if (videoData?.data?.frames) {
+      const frameCount = videoData.data.frames.length;
       setItems(Array.from({ length: frameCount }, (_, i) => i));
     }
-  }, [data]); // Dependency array ensures update only when data changes
+  }, [videoData]); // Dependency array ensures update only when data changes
 
   const getItemLabel = (label) => `Фрейм ${label}`;
   const [tabNumber, setTabNumber] = React.useState(0);
-  console.log(data);
-  if (isError) {
-    return <div>Error</div>;
+  if (videoIsError) {
+    return <div>Ошибка, пожалуйста попробуйте снова</div>;
   }
-  if (isLoading) {
-    return <div>Loading</div>;
+  if (videoIsLoading || searchIsLoading) {
+    return <div>Загрузка...</div>;
   }
 
   return (
@@ -89,17 +108,25 @@ const SingleVideo = () => {
             style={{ marginBottom: "15px" }}
           ></Text>
           <Video
-            id={id}
-            preview={data?.data?.urls.preview}
-            checksum={data?.data?.checksum}
-            video={data.data.original_url}
-            single={true}
-            desc={data.data.description}
+            id={parseInt(id)}
+            preview={videoData?.data?.urls.preview}
+            checksum={videoData?.data?.checksum}
+            video={videoData.data.original_url}
+            score={searchData.data.score}
+            desc={videoData.data.description}
+            reason={searchData.data.reasons[0].type_data}
           />
-          <div style={{ gap: "20px", display: "flex", marginTop: "20px" }}>
-            {data.data.urls.audio && (
+          <div
+            style={{
+              gap: "20px",
+              display: "flex",
+              marginTop: "20px",
+              justifyContent: "center",
+            }}
+          >
+            {videoData.data.urls.audio && (
               <Link
-                to={data.data.urls.audio.replace(
+                to={videoData.data.urls.audio.replace(
                   "http://localhost:3000",
                   import.meta.env.VITE_HOST
                 )}
@@ -108,9 +135,9 @@ const SingleVideo = () => {
                 <Button label="Скачать аудио" className="btn_black" />
               </Link>
             )}
-            {data.data.urls.subtitle && (
+            {videoData.data.urls.subtitle && (
               <Link
-                to={data.data.urls.subtitle.replace(
+                to={videoData.data.urls.subtitle.replace(
                   "http://localhost:3000",
                   import.meta.env.VITE_HOST
                 )}
@@ -122,14 +149,14 @@ const SingleVideo = () => {
           </div>
         </GridItem>
         <GridItem>
-          <Text size="3xl" align="left">
+          <Text size="2xl" align="left">
             Фреймы
           </Text>
           <Text align="left" view="secondary" style={{ marginBottom: "15px" }}>
             Мы извлекли из видео 4 вида модальностей: субтитры, звуковую
             дорожку, описание содержимого видео, пользовательское описание.
             Описание содержимого в видео мы извлекли из{" "}
-            {data?.data?.frames?.length} уникальных ключевых фреймов
+            {videoData?.data?.frames?.length} уникальных ключевых фреймов
           </Text>
           <Tabs
             value={tabNumber}
@@ -145,21 +172,40 @@ const SingleVideo = () => {
             gap="xl"
             style={{ marginTop: "30px" }}
           >
-            {data.data.frames &&
-              data.data.frames.map((item, index) => (
+            {videoData.data.frames &&
+              videoData.data.frames.map((item, index) => (
                 <GridItem
                   key={index}
                   style={{ display: index === tabNumber ? "" : "none" }}
                 >
-                  <Arguments
-                    description={item.description}
-                    time={item.time}
-                    id={item.id}
-                    url={item.url}
-                  />
+                  <Arguments description={item.description} url={item.url} />
                 </GridItem>
               ))}
           </Grid>
+        </GridItem>
+      </Grid>
+      <Grid
+        cols={1}
+        gap="xl"
+        xAlign="center"
+        yAlign="top"
+        style={{ marginTop: "60px", width: "100%" }}
+      >
+        <GridItem style={{ width: "100%" }}>
+          <Card style={{ padding: "20px", width: "100%" }}>
+            <Text size="2xl" align="center">
+              Причины на освании которых нейросеть сочла видео релевантным
+            </Text>
+            <Text style={{ marginTop: "20px" }}>
+              В{" "}
+              <Badge
+                label={reasons[searchData.data.reasons[0].type_data]}
+                size="s"
+                status="normal"
+              />{" "}
+              был найден ключ: <Text>{searchData.data.reasons[0].content}</Text>
+            </Text>
+          </Card>
         </GridItem>
       </Grid>
     </>

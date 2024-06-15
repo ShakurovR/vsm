@@ -10,11 +10,7 @@ import Footer from "./components/Footer";
 function App() {
   return (
     <>
-      <Layout
-        direction="column"
-        justifyContent="space-between"
-        style={{ minHeight: "100vh" }}
-      >
+      <Layout direction="column" style={{ minHeight: "100vh" }}>
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />

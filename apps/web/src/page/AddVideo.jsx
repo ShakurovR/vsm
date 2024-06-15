@@ -34,7 +34,6 @@ const AddVideo = () => {
     resolver: yupResolver(schema),
   });
   const onSubmit = async (data) => {
-    console.log(data);
     try {
       setLoading(true);
       const response = await axios.post(
@@ -42,7 +41,6 @@ const AddVideo = () => {
         data
       );
       setVideo(response);
-      console.log(response);
       setLoading(false);
     } catch (e) {
       console.error(e);

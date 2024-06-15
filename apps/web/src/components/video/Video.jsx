@@ -7,15 +7,13 @@ import { Button } from "@consta/uikit/Button";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
-
-const Video = ({ id, preview, checksum, video, score, desc, single }) => {
+import { reasons } from "../../data/reasons";
+const Video = ({ id, checksum, video, score, desc, single, reason }) => {
   // let updatedPreview = preview;
   // if (preview) {
   //   updatedPreview = preview.replace("http://localhost:3000/", "");
   // }
   let location = useLocation();
-  console.log(location);
-  console.log({ id, preview, checksum, video, score, desc, single });
   return (
     <GridItem>
       <Card className="video-card player-wrapper ">
@@ -23,6 +21,13 @@ const Video = ({ id, preview, checksum, video, score, desc, single }) => {
           <Badge
             status="system"
             label={`score: ${score?.toFixed(2)}`}
+            style={{ marginBottom: "10px", marginRight: "10px" }}
+          />
+        )}
+        {reasons && (
+          <Badge
+            status="success"
+            label={`На основании: ${reasons[reason]}`}
             style={{ marginBottom: "10px" }}
           />
         )}
@@ -69,4 +74,5 @@ Video.propTypes = {
   score: PropTypes.number,
   desc: PropTypes.string,
   single: PropTypes.bool,
+  reason: PropTypes.string,
 };

@@ -1,6 +1,7 @@
 import React from "react";
 import { Text } from "@consta/uikit/Text";
 import { Layout } from "@consta/uikit/Layout";
+import { Badge } from "@consta/uikit/Badge";
 
 const Spech = () => {
   return (
@@ -62,9 +63,13 @@ const Spech = () => {
           <b>Скорость работы:</b>
           <ul>
             <li>
-              Скорость индексации ~5 секунд на видео до 1 минуты в одном потоке
+              Скорость индексации <Badge label="~5 секунд" status="success" />{" "}
+              на видео до 1 минуты в одном потоке
             </li>
-            <li>Скорость поиска ~0.5 секунды на топ 10 видео</li>
+            <li>
+              Скорость поиска <Badge label="500 мс" status="success" /> на топ
+              10 видео
+            </li>
           </ul>
         </Text>
         <Text size="l" view="primary" className="paragraph">
