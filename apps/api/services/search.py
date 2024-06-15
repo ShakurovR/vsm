@@ -32,20 +32,28 @@ CHClient = Chroma(
     client=chromaclient,
 )
 
+def argmax(lst):
+    return max(range(len(lst)), key=lst.__getitem__)
+
 
 def get_correction_scope(correction: dict, data: tuple[Document, float]) -> float:
     video_id = data[0].metadata.get("video_id")
     type_data = data[0].metadata.get("type_data")
-    return (video_id, correction[type_data] * data[1])
+    return (video_id, correction[type_data] * data[1], type_data)
 
 
 def get_videos_scope(datum: list[tuple[int, float]]) -> list[VideoSearchResultList]:
     scores = {}
+    reasons = {}
     for data in datum:
         if scores.get(data[0]) is None:
             scores[data[0]] = [data[1]]
         else:
             scores[data[0]].append(data[1])
+        if reasons.get(data[0]) is None:
+            reasons[data[0]] = [data[2]]
+        else:
+            reasons[data[0]].append(data[2])
     db = get_db().__next__()
     result = []
     for video_id in scores:
@@ -59,6 +67,7 @@ def get_videos_scope(datum: list[tuple[int, float]]) -> list[VideoSearchResultLi
                 checksum=video.checksum,
                 preview=video.urls.get("preview"),
                 score=max(scores[video_id]),
+                reason=reasons[video_id][argmax(scores[video_id])],
                 video=video.urls.get("video"),
             )
         )
