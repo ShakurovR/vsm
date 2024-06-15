@@ -5,17 +5,23 @@ import Header from "./components/header/Header";
 import { Route, Routes } from "react-router-dom";
 import SingleVideo from "./page/SingleVideo";
 import AddVideo from "./page/AddVideo";
+import Footer from "./components/Footer";
 
 function App() {
   return (
     <>
-      <Layout direction="column">
+      <Layout
+        direction="column"
+        justifyContent="space-between"
+        style={{ minHeight: "100vh" }}
+      >
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/video/:id" element={<SingleVideo />} />
           <Route path="/add" element={<AddVideo />} />
         </Routes>
+        <Footer />
       </Layout>
     </>
   );

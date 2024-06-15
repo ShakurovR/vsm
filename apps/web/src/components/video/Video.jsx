@@ -6,14 +6,16 @@ import { Badge } from "@consta/uikit/Badge";
 import { Button } from "@consta/uikit/Button";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import PropTypes from "prop-types";
+
 const Video = ({ id, preview, checksum, video, score, desc, single }) => {
-  let updatedPreview = preview;
-  if (preview) {
-    updatedPreview = preview.replace("http://localhost:3000/", "");
-  }
+  // let updatedPreview = preview;
+  // if (preview) {
+  //   updatedPreview = preview.replace("http://localhost:3000/", "");
+  // }
   let location = useLocation();
   console.log(location);
-
+  console.log({ id, preview, checksum, video, score, desc, single });
   return (
     <GridItem>
       <Card className="video-card player-wrapper ">
@@ -52,3 +54,13 @@ const Video = ({ id, preview, checksum, video, score, desc, single }) => {
 };
 
 export default Video;
+
+Video.propTypes = {
+  id: PropTypes.number,
+  preview: PropTypes.string,
+  checksum: PropTypes.string,
+  video: PropTypes.string,
+  score: PropTypes.number,
+  desc: PropTypes.string,
+  single: PropTypes.bool,
+};

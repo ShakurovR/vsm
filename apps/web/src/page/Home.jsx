@@ -7,7 +7,8 @@ import React from "react";
 import SearchBlock from "../components/search/SearchBlock";
 import Video from "../components/video/Video";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Card } from "@consta/uikit/Card";
+import Container from "../components/Container";
+import Spech from "../components/Spech";
 
 const getSearch = async (value, prior) => {
   const data = await axios.get(`${import.meta.env.VITE_APIHOST}/search/`, {
@@ -64,30 +65,23 @@ const Home = () => {
     <>
       <SearchBlock handleSearch={handleSearch} />
       <Layout flex={1} className="justify-center">
-        <Grid
-          cols={1}
-          xAlign="center"
-          yAlign="top"
-          gap="xl"
-          style={{ marginTop: "30px" }}
-          breakpoints={{
-            768: {
-              cols: 4,
-            },
-          }}
-        >
-          {isLoading && (
+        {isLoading && (
+          <Container>
             <Text view="primary" size="m" lineHeight="m">
               Загрузка...
             </Text>
-          )}
-          {isError && (
+          </Container>
+        )}
+        {isError && (
+          <Container>
             <Text view="primary" size="m" lineHeight="m">
               Ошибка
             </Text>
-          )}
-          {data &&
-            data?.data?.map((item) => (
+          </Container>
+        )}
+        {data && (
+          <Container>
+            {data?.data?.map((item) => (
               <Video
                 key={item.id}
                 id={item.id}
@@ -99,7 +93,8 @@ const Home = () => {
                 desc={item.description}
               />
             ))}
-        </Grid>
+          </Container>
+        )}
         {!data && !isLoading && !isError && (
           <Grid
             cols={1}
@@ -109,27 +104,7 @@ const Home = () => {
             style={{ marginTop: "30px" }}
           >
             <GridItem>
-              <Text size="l" view="primary" className="list-grid">
-                Как мы обрабатываем видео
-              </Text>
-              <Text size="s" className="list-grid">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                Suscipit, iusto! Nobis, qui? Culpa cupiditate perspiciatis
-                reprehenderit non, repellendus nulla! Officiis quis consequatur
-                unde quod corrupti molestias fugiat nulla optio voluptatibus?
-              </Text>
-              <Text size="s" className="list-grid">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                Suscipit, iusto! Nobis, qui? Culpa cupiditate perspiciatis
-                reprehenderit non, repellendus nulla! Officiis quis consequatur
-                unde quod corrupti molestias fugiat nulla optio voluptatibus?
-              </Text>
-              <Text size="s" className="list-grid">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                Suscipit, iusto! Nobis, qui? Culpa cupiditate perspiciatis
-                reprehenderit non, repellendus nulla! Officiis quis consequatur
-                unde quod corrupti molestias fugiat nulla optio voluptatibus?
-              </Text>
+              <Spech />
             </GridItem>
           </Grid>
         )}

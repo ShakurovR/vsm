@@ -16,6 +16,11 @@ const SearchBlock = ({ handleSearch }) => {
     text: parseInt(searchParams.get("text")) || 20,
     hashtag: parseInt(searchParams.get("hashtag")) || 30,
   });
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleSearch(value, priotitet);
+    }
+  };
   const items = [
     {
       label: "Чёрный",
@@ -86,10 +91,12 @@ const SearchBlock = ({ handleSearch }) => {
             value={value}
             items={items}
             onChange={setValue}
+            onKeyDown={handleKeyDown}
           />
           <Button
             label="Искать"
             onClick={() => handleSearch(value, priotitet)}
+            className="btn_black"
           />
         </FieldGroup>
       </div>
@@ -121,7 +128,7 @@ const SearchBlock = ({ handleSearch }) => {
             }
           />
           <Select
-            label="По хэштегам"
+            label="По тегам"
             items={preVideo}
             value={{ label: priotitet.hashtag }}
             onChange={(item) =>

@@ -71,3 +71,9 @@
 .list-grid {
   margin-bottom: 10px;
 }
+.btn_black {
+  background-color: black;
+}
+.btn_black:hover {
+  background-color: rgba(0, 0, 0, 0.721) !important;
+}

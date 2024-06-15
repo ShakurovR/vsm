@@ -1,8 +1,8 @@
 import { Card } from "@consta/uikit/Card";
 import { Text } from "@consta/uikit/Text";
 import { Picture } from "@consta/uikit/Picture";
-
-const Arguments = ({ description, time, id, url }) => {
+import PropTypes from "prop-types";
+const Arguments = ({ description, url }) => {
   let clearUrl = url;
   if (url) {
     clearUrl = url.replace("http://localhost:3000/", "");
@@ -23,3 +23,10 @@ const Arguments = ({ description, time, id, url }) => {
 };
 
 export default Arguments;
+
+Arguments.propTypes = {
+  description: PropTypes.string,
+  time: PropTypes.string,
+  id: PropTypes.number,
+  url: PropTypes.string,
+};

@@ -8,7 +8,11 @@ const Header = () => {
     <Layout
       flex={1}
       className="header"
-      style={{ justifyContent: "space-between", alignItems: "center" }}
+      style={{
+        justifyContent: "space-between",
+        alignItems: "center",
+        maxHeight: "60px",
+      }}
     >
       <Text view="primary" size="m" lineHeight="m">
         <Link to="/" style={{ textDecoration: "none" }}>
