@@ -7,7 +7,7 @@ from .settings import get_settings
 SETTINGS = get_settings()
 SQLALCHEMY_DATABASE_URL = SETTINGS.database_url
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+engine = create_engine(SQLALCHEMY_DATABASE_URL, pool_size=50, max_overflow=0)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()

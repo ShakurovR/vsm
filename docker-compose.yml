@@ -82,6 +82,16 @@ services:
         condition: service_healthy
       pgsql:
         condition: service_healthy
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
+        limits:
+          memory: 55G
+
 
   indexer:
     build:
@@ -174,7 +184,7 @@ services:
     depends_on:
       api:
         condition: service_healthy
-    profiles: ["with_web"]
+          #`profiles: ["with_web"]
 
   llama:
     image: ghcr.io/ggerganov/llama.cpp:server-cuda-0ef46da632c32faa1a538e5dc180994e8bbb46e1
@@ -219,6 +229,15 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+        limits:
+          memory: 50G 
   transcriber:
     build:
       context: ./apps/transcriber

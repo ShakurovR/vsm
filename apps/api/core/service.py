@@ -2,7 +2,7 @@ from core.database import Base
 from core.schema import SuccessResult
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
-
+import chromadb
 
 def generate_services(
     db_model: Base,
@@ -95,6 +95,9 @@ def generate_services(
 
     def delete(db: Session, id: int) -> SuccessResult:
         try:
+            chromaclient = chromadb.HttpClient(host='chroma')
+            coll = chromaclient.get_collection("langchain")
+            coll.delete(where={"video_id":{"$eq":id}})
             db_instance = get_one(db=db, id=id)
             if not db_instance:
                 raise HTTPException(status_code=404, detail="Record not found")

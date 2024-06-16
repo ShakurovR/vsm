@@ -21,7 +21,7 @@ SETTINGS = get_settings()
 
 CHROMA_EMB = HuggingFaceEmbeddings(
     model_name="sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
-    model_kwargs={"trust_remote_code": True},
+    model_kwargs={"trust_remote_code": True, "device":"cuda"},
 )
 
 chromaclient = HttpClient(host=os.getenv("CHROMA_HOST", "chroma"))
@@ -72,6 +72,7 @@ def get_videos_scope(datum: list[tuple[int, float]]) -> list[VideoSearchResultLi
             )
         )
     result = sorted(result, key=lambda x: x.score, reverse=True)
+    db.close()
     return result
 
 
@@ -108,6 +109,7 @@ def filter_docs(
         )
         scores.append(result[1] * correction[result[0].metadata.get("type_data")])
     reasons = sorted(reasons, key=lambda x: x.score, reverse=True)
+    db.close()
     return VideoSearchResult(
         name=video.name,
         description=video.description,
@@ -129,12 +131,12 @@ def search_list(
     }
 
     en_query = translation(query)
-    docs = CHClient.similarity_search_with_relevance_scores(query=en_query, k=10)
+    docs = CHClient.similarity_search_with_relevance_scores(query=en_query, k=200)
     ids_score = list(
         map(lambda doc: get_correction_scope(correction=correction, data=doc), docs)
     )
 
-    result = get_videos_scope(datum=ids_score)
+    result = get_videos_scope(datum=ids_score)[:10]
 
     return result
 
