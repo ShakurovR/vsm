@@ -139,7 +139,7 @@ REACT_APP_API_URL=http://localhost:9000/
 - FastAPI
 - Sbercloud IaaS/PaaS Infrastructure
 - Docker
-- React js \ reduct
+- ReactJS + Consta.design
 - ChromaDB
 - OpenCV
 - Nginx
