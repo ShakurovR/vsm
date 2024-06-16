@@ -1,6 +1,5 @@
 # SeedVideo
-## ЛИДЕРЫ ЦИФРОВОЙ ТРАНСФОРМАЦИИ 2024
-## Задача: Сервис текстового поиска по медиаконтенту
+### Задача: Сервис текстового поиска по медиаконтенту
 ### Команда Команда Простите, у нас вдохновение \ 2024.
 
 ![alt text](https://github.com/ShakurovR/vsm/blob/main/scr3.png?raw=true)
@@ -146,3 +145,5 @@ REACT_APP_API_URL=http://localhost:9000/
 - Nginx
 - Postgresql
 - LLama.cpp server
+
+## ЛИДЕРЫ ЦИФРОВОЙ ТРАНСФОРМАЦИИ 2024
