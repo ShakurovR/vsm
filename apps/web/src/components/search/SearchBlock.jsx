@@ -11,7 +11,9 @@ import Fuse from "fuse.js";
 const SearchBlock = ({ handleSearch }) => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const [value, setValue] = React.useState(searchParams.get("query") || null);
+  const [value, setValue] = React.useState(
+    decodeURIComponent(searchParams.get("query") || "")
+  );
   const [suggestions, setSuggestions] = React.useState(sugg);
 
   const [priotitet, setPriotitet] = React.useState({
@@ -21,12 +23,12 @@ const SearchBlock = ({ handleSearch }) => {
     hashtag: parseInt(searchParams.get("hashtag")) || 30,
   });
   const fuseOptions = {
-    keys: ["label"], // Ключи объекта, по которым будет выполняться поиск
+    keys: ["label"],
     threshold: 0.35, // Порог схожести для размытого поиска
   };
   const fuse = new Fuse(sugg, fuseOptions);
   const handleInputChange = (inputValue) => {
-    const results = fuse.search(inputValue); // Выполняем поиск по введенному значению
+    const results = fuse.search(inputValue);
     const searchSuggestions = results.map((result) => result.item);
     // Обновляем список подсказок в AutoComplete
     setSuggestions(searchSuggestions);
@@ -34,10 +36,11 @@ const SearchBlock = ({ handleSearch }) => {
   };
   React.useEffect(() => {
     value && handleInputChange(value);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
+    if (event.key === "Enter" && value) {
       handleSearch(value, priotitet);
     }
   };
@@ -62,7 +65,7 @@ const SearchBlock = ({ handleSearch }) => {
           />
           <Button
             label="Искать"
-            onClick={() => handleSearch(value, priotitet)}
+            onClick={() => value && handleSearch(value, priotitet)}
             className="btn_black"
           />
         </FieldGroup>

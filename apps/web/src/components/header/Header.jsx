@@ -2,7 +2,6 @@ import { Button } from "@consta/uikit/Button";
 import { Layout } from "@consta/uikit/Layout";
 import { Text } from "@consta/uikit/Text";
 import { Link } from "react-router-dom";
-
 const Header = () => {
   return (
     <Layout
@@ -16,7 +15,7 @@ const Header = () => {
     >
       <Text view="primary" size="m" lineHeight="m">
         <Link to="/" style={{ textDecoration: "none" }}>
-          <Text size="2xl">SeedVideo</Text>
+          <img src="/logo.png" alt="" className="logo" />
         </Link>
       </Text>
       <Link to="/add" style={{ textDecoration: "none" }}>

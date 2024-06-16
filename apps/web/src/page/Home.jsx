@@ -36,30 +36,39 @@ const Home = () => {
     hashtag: parseInt(searchParams.get("hashtag")) || 30,
   });
   React.useEffect(() => {
-    setSearchValue(searchParams.get("query"));
+    const decodedQuery = decodeURIComponent(searchParams.get("query"));
+    setSearchValue(decodedQuery);
     setSearchPrioritet({
       video: parseInt(searchParams.get("video")) || 90,
       audio: parseInt(searchParams.get("audio")) || 80,
       text: parseInt(searchParams.get("text")) || 20,
       hashtag: parseInt(searchParams.get("hashtag")) || 30,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
   const handleSearch = (value, prioritet) => {
-    setSearchValue(value);
+    if (!value) {
+      return;
+    }
+    const encodedValue = encodeURIComponent(value);
+    setSearchValue(encodedValue);
     setSearchPrioritet({ ...prioritet });
     navigate(
-      `/?query=${value}&video=${prioritet.video}&audio=${prioritet.audio}&text=${prioritet.text}&hashtag=${prioritet.hashtag}`
+      `/?query=${encodedValue}&video=${prioritet.video}&audio=${prioritet.audio}&text=${prioritet.text}&hashtag=${prioritet.hashtag}`
     );
   };
+
   const { data, isLoading, isError } = useQuery({
     queryKey: ["search", searchValue, searchPrioritet],
     queryFn: () => getSearch(searchValue, searchPrioritet),
-    enabled: !!searchValue,
+    enabled:
+      !!searchValue && searchValue.trim() !== "" && searchValue !== "null",
     options: {
       keepPreviousData: true,
       refetchOnWindowFocus: true,
     },
   });
+  console.log(data);
   return (
     <>
       <SearchBlock handleSearch={handleSearch} />

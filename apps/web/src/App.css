@@ -85,3 +85,17 @@
 .btn_black:hover {
   background-color: rgba(0, 0, 0, 0.721) !important;
 }
+
+.equal-height-JlocK {
+  display: block;
+  overflow: hidden;
+  transition-property: height;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.logo {
+  height: 40px;
+  display: flex;
+}

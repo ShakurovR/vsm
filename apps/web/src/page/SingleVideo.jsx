@@ -11,6 +11,7 @@ import { Button } from "@consta/uikit/Button";
 import { Badge } from "@consta/uikit/Badge";
 import { reasons } from "../data/reasons";
 import { Card } from "@consta/uikit/Card";
+import { EqualHeight } from "react-equal-height";
 
 const getVideo = async (id) => {
   const data = await axios.get(`${import.meta.env.VITE_APIHOST}/video/${id}`);
@@ -50,7 +51,11 @@ const SingleVideo = () => {
       refetchOnWindowFocus: true,
     },
   });
-  const { data: searchData, isLoading: searchIsLoading } = useQuery({
+  const {
+    data: searchData,
+    isLoading: searchIsLoading,
+    isError: searchIsError,
+  } = useQuery({
     queryKey: ["search", id],
     queryFn: () => getSearchData(id, query, video, audio, text, hashtag),
     options: {
@@ -96,7 +101,18 @@ const SingleVideo = () => {
           style={{ backgroundColor: "#000" }}
         />
       </Link>
-      <Grid cols={2} gap="xl" xAlign="center" yAlign="top">
+
+      <Grid
+        cols={1}
+        gap="xl"
+        xAlign="center"
+        yAlign="top"
+        breakpoints={{
+          768: {
+            cols: 2,
+          },
+        }}
+      >
         <GridItem>
           <Text size="2xl" align="left">
             {query && `Запрос: ${query}`}
@@ -107,46 +123,20 @@ const SingleVideo = () => {
             view="secondary"
             style={{ marginBottom: "15px" }}
           ></Text>
-          <Video
-            id={parseInt(id)}
-            preview={videoData?.data?.urls.preview}
-            checksum={videoData?.data?.checksum}
-            video={videoData.data.original_url}
-            score={searchData.data.score}
-            desc={videoData.data.description}
-            reason={searchData.data.reasons[0].type_data}
-          />
-          <div
-            style={{
-              gap: "20px",
-              display: "flex",
-              marginTop: "20px",
-              justifyContent: "center",
-            }}
-          >
-            {videoData.data.urls.audio && (
-              <Link
-                to={videoData.data.urls.audio.replace(
-                  "http://localhost:3000",
-                  import.meta.env.VITE_HOST
-                )}
-                target="_blank"
-              >
-                <Button label="Скачать аудио" className="btn_black" />
-              </Link>
-            )}
-            {videoData.data.urls.subtitle && (
-              <Link
-                to={videoData.data.urls.subtitle.replace(
-                  "http://localhost:3000",
-                  import.meta.env.VITE_HOST
-                )}
-                target="_blank"
-              >
-                <Button label="Скачать субтитры" className="btn_black" />
-              </Link>
-            )}
-          </div>
+          <EqualHeight>
+            <Video
+              id={parseInt(id)}
+              preview={videoData?.data?.urls.preview}
+              checksum={videoData?.data?.checksum}
+              video={videoData.data.original_url}
+              score={searchData?.data.score}
+              desc={videoData.data.description}
+              reason={searchData?.data.reasons[0].type_data}
+              single={true}
+              audioURL={videoData.data.urls.audio}
+              subtitleURL={videoData.data.urls.subtitle}
+            />
+          </EqualHeight>
         </GridItem>
         <GridItem>
           <Text size="2xl" align="left">
@@ -191,7 +181,7 @@ const SingleVideo = () => {
         yAlign="top"
         style={{ marginTop: "60px", width: "100%" }}
       >
-        {!searchIsLoading && (
+        {!searchIsLoading && !searchIsError && (
           <GridItem style={{ width: "100%" }}>
             <Card style={{ padding: "20px", width: "100%" }}>
               <Text size="2xl" align="center">

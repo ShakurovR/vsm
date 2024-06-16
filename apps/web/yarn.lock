@@ -2120,6 +2120,11 @@ react-dropzone@^14.2.3:
     file-selector "^0.6.0"
     prop-types "^15.8.1"
 
+react-equal-height@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/react-equal-height/-/react-equal-height-1.2.2.tgz#438b8170fa8b98f64f705f517e6c4d6889c9bd9b"
+  integrity sha512-iRL2Gcem5fwtsOzxMVwmCUiaaKyQ4Ba/jf4AIEGImIId8ub4Vop0kieg22yO0nt2HYW3+AfrJGIVid091lm2/A==
+
 react-fast-compare@^3.0.1:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-3.2.2.tgz#929a97a532304ce9fee4bcae44234f1ce2c21d49"
