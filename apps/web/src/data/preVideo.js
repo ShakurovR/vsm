@@ -1,5 +1,8 @@
 export const preVideo = [
   {
+    label: 0,
+  },
+  {
     label: 10,
   },
   {

@@ -9,6 +9,8 @@ import React from "react";
 import Video from "../components/video/Video";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { EqualHeight } from "react-equal-height";
+import { Link } from "react-router-dom";
 
 const schema = yup
   .object({
@@ -81,32 +83,39 @@ const AddVideo = () => {
           <GridItem>
             <Text>Видео добавлено и скоро будет проидексировано!</Text>
             <Card style={{ padding: "20px" }}>
-              <Video
-                id={video?.data?.id}
-                preview={video?.data?.urls?.preview}
-                checksum={video?.data?.checksum}
-                video={video?.data?.original_url}
-                single={true}
-                desc={video?.data?.description}
-              />
+              <EqualHeight>
+                <Video
+                  id={video?.data?.id}
+                  preview={video?.data?.urls?.preview}
+                  checksum={video?.data?.checksum}
+                  video={video?.data?.original_url}
+                  single={true}
+                  desc={video?.data?.description}
+                />
+              </EqualHeight>
             </Card>
           </GridItem>
         </Grid>
-        <Button
-          label="Добавить еще одно"
-          size="m"
-          view="primary"
-          style={{
-            backgroundColor: "#000",
-            width: "200px",
-            margin: "20px auto",
-          }}
-          onClick={() => {
-            setVideo(null);
-            resetField("url");
-            resetField("description");
-          }}
-        />
+        <div>
+          <Button
+            label="Добавить еще одно"
+            size="m"
+            view="primary"
+            style={{
+              backgroundColor: "#000",
+              width: "200px",
+              margin: "20px auto",
+            }}
+            onClick={() => {
+              setVideo(null);
+              resetField("url");
+              resetField("description");
+            }}
+          />
+          <Link to={`/video/${video.data.id}`}>
+            <Button label="К видео" style={{ marginLeft: "10px" }} />{" "}
+          </Link>
+        </div>
       </>
     );
   }

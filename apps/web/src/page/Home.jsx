@@ -68,7 +68,6 @@ const Home = () => {
       refetchOnWindowFocus: true,
     },
   });
-  console.log(data);
   return (
     <>
       <SearchBlock handleSearch={handleSearch} />

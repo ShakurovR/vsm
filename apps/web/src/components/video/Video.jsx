@@ -38,7 +38,7 @@ const Video = ({
                   style={{ marginBottom: "10px", marginRight: "10px" }}
                 />
               )}
-              {reasons && (
+              {reasons && reason && (
                 <Badge
                   status="success"
                   label={`На основании: ${reasons[reason]}`}

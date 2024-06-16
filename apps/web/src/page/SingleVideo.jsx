@@ -87,20 +87,27 @@ const SingleVideo = () => {
 
   return (
     <>
-      <Link
-        to={".."}
-        onClick={(e) => {
-          e.preventDefault();
-          navigate(-1);
-        }}
-        style={{ textAlign: "right" }}
-      >
-        <Button
-          label="К результатам поиска"
-          size="xs"
-          style={{ backgroundColor: "#000" }}
+      <div style={{ display: "flex", justifyContent: "end", gap: "10px" }}>
+        <Badge
+          label={videoData.data.is_indexed ? "Индексирован" : "Не индексирован"}
+          style={{ marginBottom: "15px" }}
+          size="m"
         />
-      </Link>
+        <Link
+          to={".."}
+          onClick={(e) => {
+            e.preventDefault();
+            navigate(-1);
+          }}
+          style={{ textAlign: "right" }}
+        >
+          <Button
+            label="К результатам поиска"
+            size="xs"
+            style={{ backgroundColor: "#000" }}
+          />
+        </Link>
+      </div>
 
       <Grid
         cols={1}
