@@ -13,7 +13,7 @@ const Header = () => {
         maxHeight: "60px",
       }}
     >
-      <Text view="primary" size="m" lineHeight="m">
+      <Text view="primary" size="m" lineHeight="m" style={{ padding: "0px" }}>
         <Link to="/" style={{ textDecoration: "none" }}>
           <img src="/logo.png" alt="" className="logo" />
         </Link>
