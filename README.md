@@ -1,7 +1,3 @@
-<p align="center">
-  <a href='' target='_blank'><img src='' height="auto" width="100%" style="border-radius:50%"></a>
-</p>
-
 # SeedVideo
 
 ## Описание проекта:
@@ -17,7 +13,7 @@
  
 ### Команда Команда Простите, у нас вдохновение \ 2024.
 
-![alt text](https://downloader.disk.yandex.ru/preview/d3cd19e7e42b524db4e96bcfde483a307110c35cffdd09fa675b30cb9a84eb68/666ebcae/w233wAFTgbikELyR3CxY71PRTKlIa7X2yT2RGzDs90xxvkzFlOweW2LiAct6uhwOWW0YOGNJ8RazrvxTAYLbeg%3D%3D?uid=0&filename=photo_2024-06-16_10-21-04.jpg&disposition=inline&hash=&limit=0&content_type=image%2Fjpeg&owner_uid=0&tknv=v2&size=2048x2048?raw=true)
+![alt text](https://github.com/ShakurovR/vsm/blob/main/scr1.jpg?raw=true)
 
 ### Суть проекта:
 Платформа «Коммунальный Экспер» агрегирует данные об объектах, инцидентах и ремонтных работах из различных источников, связывает их и обрабатвыает с целью рекомендаций по будущим работам для предотвращения или более быстрого реагирования на инциденты.
@@ -35,7 +31,7 @@
 -    RAG.
 
 ### Архитектура сервиса:
-![alt text](https://downloader.disk.yandex.ru/preview/b23b898db462b15b909cb1f69e498979a9e4ffb65585702da39972d1e921634d/666ebac9/E4pdVgGnyqTWUEhU2Ydoj9ausEqL93hVBN9G-F6JPu0uK6NCQDVakH8-CyjIgQaDZhaafH87wrF6yMhVW2x_6Q%3D%3D?uid=0&filename=arch.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=0&tknv=v2&size=2048x2048?raw=true)
+![alt text](https://github.com/ShakurovR/vsm/blob/main/arch.png?raw=true)
 
 ### Как мы обрабатываем видео:
 В нашем решении использована гибридная архитектура, позволяющая гибко настраивать и извлекать необходимые данные из видео на нескольких уровнях: из произносимой речи на видео, из фоновой звуковой дорожки, из происходящего на видео, из пользовательского описания видео. Совокупность этих данных мы векторизуем, и с помощью поиска по векторной базе мы предоставляем ТОП самых подходящих под описание запроса видео. Более того наша архитектура позволяет конфигурировать веса важности вышеописанных данных и использовать LLM с помощью RAG (контекстные запросы) чтобы находить видео еще на более глубоком уровне.
@@ -100,7 +96,7 @@
  https://api.seedvideo.ru/docs
  пример опенапи: https://api.seedvideo.ru/openapi.json
 
-![alt text](https://downloader.disk.yandex.ru/preview/10eca6396eb49d29a79b759327ee14a381f000f962955fdc23daa45c04244202/666ebb42/4_fohzMeE08ss7-VLzC44ARTceId5Jv37KI28vJzYOHQOIGpau6uVhLyztHx3t5SAm43pOz7uyDA_1vz5k4mfw%3D%3D?uid=0&filename=Firefox_Screenshot_2024-06-16T06-15-08.282Z.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=0&tknv=v2&size=2048x2048?raw=true)
+![alt text](https://github.com/ShakurovR/vsm/blob/main/scr2.png?raw=true)
 
 ## Установка 
 
